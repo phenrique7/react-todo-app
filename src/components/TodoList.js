@@ -21,7 +21,6 @@ const TodoList = ({ todos, addTodo}) => {
                     return;
                 }
                 addTodo(input.value);
-                // dispatch(addTodo(input.value));
                 input.value = '';
             }}>
                 <input ref={node => input = node} />
