@@ -1,7 +1,14 @@
 import React from 'react';
+import TodoInput from './components/TodoInput';
+import styles from './assets/css/app.css';
 
 function App() {
-  return <h1>Hello, Webpack! You are awesome!</h1>;
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.title}>todos</h1>
+      <TodoInput />
+    </div>
+  );
 }
 
 export default App;
