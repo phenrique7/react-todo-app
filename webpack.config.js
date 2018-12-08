@@ -2,19 +2,19 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.jsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   module: {
     rules: [
       {
-        test: /\.m?js$/,
+        test: /\.js$|\.jsx$/,
         exclude: /(node_modules)/,
         use: {
           loader: 'babel-loader',
-        }
+        },
       },
       {
         test: /\.css$/,
@@ -26,11 +26,11 @@ module.exports = {
               modules: true,
               camelCase: true,
               localIdentName: '[name]__[local]--[hash:base64:5]',
-            }
-          }
-        ]
-      }
-    ]
+            },
+          },
+        ],
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -38,6 +38,9 @@ module.exports = {
       title: 'React Todo App',
       template: './src/index.html',
       filename: './index.html',
-    })
-  ]
+    }),
+  ],
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
 };
