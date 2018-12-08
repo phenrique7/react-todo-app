@@ -1,2 +1,2 @@
-# todo-react-redux-app
-A classic todo app with react + redux.
+# react-todo-app
+A classic todo app.
