@@ -18,12 +18,17 @@ class TodoItem extends React.Component {
     this.submitTodoEdited = this.submitTodoEdited.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
     this.handleCheckTodo = this.handleCheckTodo.bind(this);
+    this.handleRemoveTodo = this.handleRemoveTodo.bind(this);
   }
 
   handleCheckTodo() {
     const { id, isCompleted, changeTodo } = this.props;
-
     changeTodo(id, 'isCompleted', !isCompleted);
+  }
+
+  handleRemoveTodo() {
+    const { id, removeTodo } = this.props;
+    removeTodo(id);
   }
 
   handleChange({ target: { value } }) {
@@ -34,7 +39,6 @@ class TodoItem extends React.Component {
     if (event.key === 'Enter') {
       const { todo } = this.state;
       const { id, changeTodo } = this.props;
-
       changeTodo(id, 'todo', todo);
     }
   }
@@ -65,9 +69,7 @@ class TodoItem extends React.Component {
         <span
           onClick={this.handleCheckTodo}
           className={
-            isCompleted
-              ? styles.todoCheckmarked
-              : styles.todoCheckmark
+            isCompleted ? styles.todoCheckmarked : styles.todoCheckmark
           }
         />
         {isTodoBeingEdited ? (
@@ -80,16 +82,17 @@ class TodoItem extends React.Component {
             className={styles.todoEdited}
           />
         ) : (
-          <p
-            className={
-              isCompleted ? styles.todoCompleted : styles.todo
-            }
-          >
+          <p className={isCompleted ? styles.todoCompleted : styles.todo}>
             {todo}
           </p>
         )}
         <div className={styles.todoCloseIcon}>
-          <img src={CloseIcon} alt="Remove todo" width={27} />
+          <img
+            src={CloseIcon}
+            alt="Remove todo"
+            width={27}
+            onClick={this.handleRemoveTodo}
+          />
         </div>
       </li>
     );
@@ -101,6 +104,7 @@ TodoItem.propTypes = {
   todo: PropTypes.string.isRequired,
   isCompleted: PropTypes.bool.isRequired,
   changeTodo: PropTypes.func.isRequired,
+  removeTodo: PropTypes.func.isRequired,
 };
 
 export default TodoItem;

@@ -16,6 +16,7 @@ class Todo extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.submitTodo = this.submitTodo.bind(this);
     this.changeTodo = this.changeTodo.bind(this);
+    this.removeTodo = this.removeTodo.bind(this);
   }
 
   handleChange({ target: { value } }) {
@@ -46,6 +47,24 @@ class Todo extends React.Component {
     }));
   }
 
+  removeTodo(todoId) {
+    const { todos } = this.state;
+
+    const newTodos = Object.keys(todos).reduce(
+      (result, item, index, array) => {
+        if (item !== todoId) {
+          return Object.assign({}, result, {
+            [array[index]]: todos[item],
+          });
+        }
+        return Object.assign({}, result);
+      },
+      {},
+    );
+
+    this.setState({ todos: newTodos });
+  }
+
   render() {
     const { todo, todos } = this.state;
     const todoList = Object.values(todos);
@@ -71,6 +90,7 @@ class Todo extends React.Component {
                   todo={todoItem.todo}
                   isCompleted={todoItem.isCompleted}
                   changeTodo={this.changeTodo}
+                  removeTodo={this.removeTodo}
                 />
               ))}
             </ul>

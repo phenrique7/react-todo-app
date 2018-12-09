@@ -39,6 +39,10 @@
 
 .todoEdited {
   color: var(--todo-color);
+  border: none;
+  font-size: 1em;
+  height: 100%;
+  flex: 1;
 }
 
 .todo {
@@ -58,4 +62,8 @@
   height: 100%;
   width: 40px;
   padding-top: 15px;
+}
+
+.todoCloseIcon img {
+  cursor: pointer;
 }
