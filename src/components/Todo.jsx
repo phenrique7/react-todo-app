@@ -14,7 +14,7 @@ class Todo extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.submitTodo = this.submitTodo.bind(this);
     this.changeTodo = this.changeTodo.bind(this);
   }
 
@@ -22,17 +22,19 @@ class Todo extends React.Component {
     this.setState({ todo: value });
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    const { todo } = this.state;
-    const todoId = shortid.generate();
+  submitTodo(event) {
+    if (event.key === 'Enter') {
+      const { todo } = this.state;
+      const todoId = shortid.generate();
 
-    this.setState(state => ({
-      todos: {
-        ...state.todos,
-        [todoId]: { id: todoId, todo, isCompleted: false },
-      },
-    }));
+      this.setState(state => ({
+        todo: '',
+        todos: {
+          ...state.todos,
+          [todoId]: { id: todoId, todo, isCompleted: false },
+        },
+      }));
+    }
   }
 
   changeTodo(todoId, property, value) {
@@ -50,27 +52,28 @@ class Todo extends React.Component {
 
     return (
       <section className={styles.todoApp}>
-        <form onSubmit={this.handleSubmit}>
-          <span className={styles.checkAll} />
-          <input
-            type="submit"
-            className={styles.todoInput}
-            placeholder="What needs to be done?"
-            onChange={this.handleChange}
-            value={todo}
-          />
-        </form>
+        <span className={styles.checkAll} />
+        <input
+          type="text"
+          className={styles.todoInput}
+          placeholder="What needs to be done?"
+          onChange={this.handleChange}
+          onKeyPress={this.submitTodo}
+          value={todo}
+        />
         {todoList.length > 0 && (
           <>
-            {todoList.map(todoItem => (
-              <TodoItem
-                key={todoItem.id}
-                id={todoItem.id}
-                todo={todoItem.todo}
-                isCompleted={todoItem.isCompleted}
-                changeTodo={this.changeTodo}
-              />
-            ))}
+            <ul className={styles.todoList}>
+              {todoList.map(todoItem => (
+                <TodoItem
+                  key={todoItem.id}
+                  id={todoItem.id}
+                  todo={todoItem.todo}
+                  isCompleted={todoItem.isCompleted}
+                  changeTodo={this.changeTodo}
+                />
+              ))}
+            </ul>
             <TodoFooter />
           </>
         )}

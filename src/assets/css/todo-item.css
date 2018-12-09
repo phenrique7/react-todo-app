@@ -1,12 +1,61 @@
 
-.todoItem {
+:root {
+  --todo-color: rgba(26, 26, 26, 0.8);
+}
 
+.todoItem {
+  position: relative;
+  font-size: 24px;
+  border-bottom: 1px solid #ededed;
+  height: 59px;
+  display: flex;
+  align-items: center;
+  background: #fff;
+}
+
+.todoCheckmark {
+  display: block;
+  border: 2px solid #e6e6e6;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  padding-top: 1px;
+  margin: 0 15px;
+  cursor: pointer;
+}
+
+.todoCheckmarked {
+  composes: todoCheckmark;
+}
+
+.todoCheckmarked::after {
+  content: '';
+  background: url("../svg/checkmark-icon.svg");
+  height: 24px;
+  width: 24px;
+  display: inline-block;
+  background-size: 100%;
+}
+
+.todoEdited {
+  color: var(--todo-color);
 }
 
 .todo {
-
+  color: var(--todo-color);
+  height: 100%;
+  padding: 15px 10px 10px 0;
+  flex: 1;
 }
 
 .todoCompleted {
+  composes: todo;
+  color: rgba(0, 0, 0, 0.2);
+  text-decoration: line-through;
+}
 
+.todoCloseIcon {
+  height: 100%;
+  width: 40px;
+  padding-top: 15px;
 }
