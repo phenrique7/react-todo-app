@@ -39,10 +39,12 @@
 
 .todoEdited {
   color: var(--todo-color);
-  border: none;
   font-size: 1em;
   height: 100%;
   flex: 1;
+  box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+  padding: 6px;
+  border: 1px solid #999;
 }
 
 .todo {

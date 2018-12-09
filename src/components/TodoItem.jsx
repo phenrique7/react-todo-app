@@ -19,6 +19,30 @@ class TodoItem extends React.Component {
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
     this.handleCheckTodo = this.handleCheckTodo.bind(this);
     this.handleRemoveTodo = this.handleRemoveTodo.bind(this);
+    this.setWrapperRef = this.setWrapperRef.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  setWrapperRef(node) {
+    this.wrapperRef = node;
+  }
+
+  handleClickOutside(event) {
+    const { isTodoBeingEdited } = this.state;
+
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+      if (isTodoBeingEdited) {
+        this.submitTodoEdited({ key: 'Enter' });
+      }
+    }
   }
 
   handleCheckTodo() {
@@ -37,9 +61,10 @@ class TodoItem extends React.Component {
 
   submitTodoEdited(event) {
     if (event.key === 'Enter') {
-      const { todo } = this.state;
+      const { todoEdited } = this.state;
       const { id, changeTodo } = this.props;
-      changeTodo(id, 'todo', todo);
+      changeTodo(id, 'todo', todoEdited);
+      this.setState({ isTodoBeingEdited: false });
     }
   }
 
@@ -72,14 +97,16 @@ class TodoItem extends React.Component {
             isCompleted ? styles.todoCheckmarked : styles.todoCheckmark
           }
         />
-        {isTodoBeingEdited ? (
+        {isTodoBeingEdited && !isCompleted ? (
           <input
             type="text"
+            autoFocus
             name="todo-edited"
             onChange={this.handleChange}
             onKeyPress={this.submitTodoEdited}
             value={todo !== todoEdited ? todoEdited : todo}
             className={styles.todoEdited}
+            ref={this.setWrapperRef}
           />
         ) : (
           <p className={isCompleted ? styles.todoCompleted : styles.todo}>
