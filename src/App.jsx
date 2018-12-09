@@ -1,12 +1,12 @@
 import React from 'react';
-import TodoInput from './components/TodoInput';
+import Todo from './components/Todo';
 import styles from './assets/css/app.css';
 
 function App() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>todos</h1>
-      <TodoInput />
+      <Todo />
     </div>
   );
 }
