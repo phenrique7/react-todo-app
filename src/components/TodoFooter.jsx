@@ -20,8 +20,8 @@ class TodoFooter extends React.Component {
     } else if (name === 'button-active' && buttonActive !== 'active') {
       this.setState({ buttonActive: 'active' });
     } else if (
-      name === 'button-completed' &&
-      buttonActive !== 'completed'
+      name === 'button-completed'
+      && buttonActive !== 'completed'
     ) {
       this.setState({ buttonActive: 'completed' });
     } else {

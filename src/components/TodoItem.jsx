@@ -62,9 +62,14 @@ class TodoItem extends React.Component {
   submitTodoEdited(event) {
     if (event.key === 'Enter') {
       const { todoEdited } = this.state;
-      const { id, changeTodo } = this.props;
-      changeTodo(id, 'todo', todoEdited);
-      this.setState({ isTodoBeingEdited: false });
+      const { id, todo, changeTodo } = this.props;
+
+      if (todoEdited.trim().length === 0) {
+        this.setState({ todoEdited: todo, isTodoBeingEdited: false });
+      } else {
+        changeTodo(id, 'todo', todoEdited);
+        this.setState({ isTodoBeingEdited: false });
+      }
     }
   }
 

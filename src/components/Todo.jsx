@@ -11,9 +11,11 @@ class Todo extends React.Component {
     this.state = {
       todo: '',
       todos: {},
+      checked: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.checkAllTodos = this.checkAllTodos.bind(this);
     this.submitTodo = this.submitTodo.bind(this);
     this.changeTodo = this.changeTodo.bind(this);
     this.removeTodo = this.removeTodo.bind(this);
@@ -21,6 +23,24 @@ class Todo extends React.Component {
 
   handleChange({ target: { value } }) {
     this.setState({ todo: value });
+  }
+
+  checkAllTodos() {
+    const { todos, checked } = this.state;
+    const checkedTodos = {};
+    const todosKeys = Object.keys(todos);
+
+    todosKeys.forEach((todoKey) => {
+      checkedTodos[todoKey] = {
+        ...todos[todoKey],
+        isCompleted: !checked,
+      };
+    });
+
+    this.setState(state => ({
+      todos: checkedTodos,
+      checked: !state.checked,
+    }));
   }
 
   submitTodo(event) {
@@ -71,7 +91,7 @@ class Todo extends React.Component {
 
     return (
       <section className={styles.todoApp}>
-        <span className={styles.checkAll} />
+        <span className={styles.checkAll} onClick={this.checkAllTodos} />
         <input
           type="text"
           className={styles.todoInput}

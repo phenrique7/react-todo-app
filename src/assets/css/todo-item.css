@@ -7,7 +7,7 @@
   position: relative;
   font-size: 24px;
   border-bottom: 1px solid #ededed;
-  height: 59px;
+  min-height: 59px;
   display: flex;
   align-items: center;
   background: #fff;
@@ -50,8 +50,9 @@
 .todo {
   color: var(--todo-color);
   height: 100%;
-  padding: 15px 10px 10px 0;
+  padding: 10px 10px 10px 0;
   flex: 1;
+  word-break: break-word;
 }
 
 .todoCompleted {
@@ -63,7 +64,7 @@
 .todoCloseIcon {
   height: 100%;
   width: 40px;
-  padding-top: 15px;
+  padding-top: 5px;
 }
 
 .todoCloseIcon img {
