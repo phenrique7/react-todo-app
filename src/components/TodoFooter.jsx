@@ -1,76 +1,66 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styles from '../assets/css/todo-footer.css';
 
-class TodoFooter extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      buttonActive: 'all',
-    };
-
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick({ target: { name } }) {
-    const { buttonActive } = this.state;
-
-    if (name === 'button-all' && buttonActive !== 'all') {
-      this.setState({ buttonActive: 'all' });
-    } else if (name === 'button-active' && buttonActive !== 'active') {
-      this.setState({ buttonActive: 'active' });
+function TodoFooter({ filter, filterTodos }) {
+  function handleClick({ target: { name } }) {
+    if (name === 'button-all' && filter !== 'all') {
+      filterTodos('all');
+    } else if (name === 'button-active' && filter !== 'active') {
+      filterTodos('active');
     } else if (
       name === 'button-completed'
-      && buttonActive !== 'completed'
+      && filter !== 'completed'
     ) {
-      this.setState({ buttonActive: 'completed' });
+      filterTodos('completed');
     } else {
-      // this.setState({ buttonActive: 'all' });
+      // clearAll();
     }
   }
 
-  render() {
-    const { buttonActive } = this.state;
-
-    return (
-      <footer className={styles.footer}>
-        <p>item left</p>
-        <ul>
-          <li
-            onClick={this.handleClick}
-            className={buttonActive === 'all' ? styles.activeButton : ''}
-          >
-            <button type="button" name="button-all">
-              All
-            </button>
-          </li>
-          <li
-            onClick={this.handleClick}
-            className={
-              buttonActive === 'active' ? styles.activeButton : ''
-            }
-          >
-            <button type="button" name="button-active">
-              Active
-            </button>
-          </li>
-          <li
-            onClick={this.handleClick}
-            className={
-              buttonActive === 'completed' ? styles.activeButton : ''
-            }
-          >
-            <button type="button" name="button-completed">
-              Completed
-            </button>
-          </li>
-        </ul>
-        <button type="button" name="button-clear">
-          Clear all
-        </button>
-      </footer>
-    );
-  }
+  return (
+    <footer className={styles.footer}>
+      <p>item left</p>
+      <ul>
+        <li
+          onClick={handleClick}
+          className={filter === 'all' ? styles.activeButton : ''}
+        >
+          <button type="button" name="button-all">
+            All
+          </button>
+        </li>
+        <li
+          onClick={handleClick}
+          className={
+            filter === 'active' ? styles.activeButton : ''
+          }
+        >
+          <button type="button" name="button-active">
+            Active
+          </button>
+        </li>
+        <li
+          onClick={handleClick}
+          className={
+            filter === 'completed' ? styles.activeButton : ''
+          }
+        >
+          <button type="button" name="button-completed">
+            Completed
+          </button>
+        </li>
+      </ul>
+      <button type="button" name="button-clear" onClick={handleClick}>
+        Clear all
+      </button>
+    </footer>
+  );
 }
+
+TodoFooter.propTypes = {
+  filter: PropTypes.string.isRequired,
+  filterTodos: PropTypes.func.isRequired,
+};
 
 export default TodoFooter;

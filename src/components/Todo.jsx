@@ -1,17 +1,21 @@
 import React from 'react';
 import shortid from 'shortid';
-import styles from '../assets/css/todo.css';
 import TodoItem from './TodoItem';
 import TodoFooter from './TodoFooter';
+import { immutableRemoveObjectProperty } from '../utils';
+import styles from '../assets/css/todo.css';
 
 class Todo extends React.Component {
   constructor(props) {
     super(props);
 
+    this.filter = 'all';
+    this.checked = false;
+    this.allTodos = {};
+
     this.state = {
       todo: '',
       todos: {},
-      checked: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -19,6 +23,7 @@ class Todo extends React.Component {
     this.submitTodo = this.submitTodo.bind(this);
     this.changeTodo = this.changeTodo.bind(this);
     this.removeTodo = this.removeTodo.bind(this);
+    this.filterTodos = this.filterTodos.bind(this);
   }
 
   handleChange({ target: { value } }) {
@@ -26,63 +31,109 @@ class Todo extends React.Component {
   }
 
   checkAllTodos() {
-    const { todos, checked } = this.state;
+    const { todos } = this.state;
     const checkedTodos = {};
     const todosKeys = Object.keys(todos);
 
     todosKeys.forEach((todoKey) => {
       checkedTodos[todoKey] = {
         ...todos[todoKey],
-        isCompleted: !checked,
+        isCompleted: !this.checked,
       };
     });
 
-    this.setState(state => ({
-      todos: checkedTodos,
-      checked: !state.checked,
-    }));
+    this.setState({ todos: checkedTodos }, () => {
+      this.checked = !this.checked;
+    });
   }
 
   submitTodo(event) {
-    if (event.key === 'Enter') {
-      const { todo } = this.state;
+    const { todo } = this.state;
+
+    if (event.key === 'Enter' && todo.trim().length > 0) {
       const todoId = shortid.generate();
 
+      if (this.filter !== 'all') {
+        this.allTodos = {
+          ...this.allTodos,
+          [todoId]: { id: todoId, todo, isCompleted: false },
+        };
+
+        this.filterTodos(this.filter);
+      } else {
+        this.setState(state => ({
+          todo: '',
+          todos: {
+            ...state.todos,
+            [todoId]: { id: todoId, todo, isCompleted: false },
+          },
+        }));
+      }
+    }
+  }
+
+  changeTodo(todoId, property, value) {
+    if (this.filter !== 'all' && property === 'isCompleted') {
+      this.allTodos = {
+        ...this.allTodos,
+        [todoId]: { ...this.allTodos[todoId], [property]: value },
+      };
+
+      this.filterTodos(this.filter);
+    } else {
       this.setState(state => ({
-        todo: '',
         todos: {
           ...state.todos,
-          [todoId]: { id: todoId, todo, isCompleted: false },
+          [todoId]: { ...state.todos[todoId], [property]: value },
         },
       }));
     }
   }
 
-  changeTodo(todoId, property, value) {
-    this.setState(state => ({
-      todos: {
-        ...state.todos,
-        [todoId]: { ...state.todos[todoId], [property]: value },
-      },
-    }));
+  removeTodo(todoId) {
+    if (this.filter !== 'all') {
+      this.allTodos = immutableRemoveObjectProperty(this.allTodos, todoId);
+      this.filterTodos(this.filter);
+    } else {
+      const { todos } = this.state;
+
+      this.setState({
+        todos: immutableRemoveObjectProperty(todos, todoId),
+      });
+    }
   }
 
-  removeTodo(todoId) {
-    const { todos } = this.state;
+  filterTodos(filter) {
+    if (this.filter === 'all') {
+      const { todos } = this.state;
+      this.allTodos = Object.assign({}, todos);
+    }
 
-    const newTodos = Object.keys(todos).reduce(
-      (result, item, index, array) => {
-        if (item !== todoId) {
-          return Object.assign({}, result, {
-            [array[index]]: todos[item],
-          });
-        }
-        return Object.assign({}, result);
-      },
-      {},
-    );
+    this.filter = filter;
 
-    this.setState({ todos: newTodos });
+    if (filter === 'all') {
+      this.setState({
+        todos: Object.assign({}, this.allTodos),
+      });
+    } else {
+      const filteredTodos = {};
+
+      if (filter === 'active') {
+        Object.values(this.allTodos).forEach((todo) => {
+          if (!todo.isCompleted) {
+            filteredTodos[todo.id] = Object.assign({}, todo);
+          }
+        });
+      } else if (filter === 'completed') {
+        Object.values(this.allTodos).forEach((todo) => {
+          if (todo.isCompleted) {
+            filteredTodos[todo.id] = Object.assign({}, todo);
+          }
+        });
+      }
+
+      this.setState({ todo: '', todos: filteredTodos });
+    }
   }
 
   render() {
@@ -100,7 +151,7 @@ class Todo extends React.Component {
           onKeyPress={this.submitTodo}
           value={todo}
         />
-        {todoList.length > 0 && (
+        {(todoList.length > 0 || this.filter !== 'all') && (
           <>
             <ul className={styles.todoList}>
               {todoList.map(todoItem => (
@@ -114,7 +165,10 @@ class Todo extends React.Component {
                 />
               ))}
             </ul>
-            <TodoFooter />
+            <TodoFooter
+              filter={this.filter}
+              filterTodos={this.filterTodos}
+            />
           </>
         )}
       </section>

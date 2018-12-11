@@ -121,7 +121,7 @@ class TodoItem extends React.Component {
         <div className={styles.todoCloseIcon}>
           <img
             src={CloseIcon}
-            alt="Remove todo"
+            alt=""
             width={27}
             onClick={this.handleRemoveTodo}
           />
