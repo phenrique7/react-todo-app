@@ -79,9 +79,8 @@ class Todo extends React.Component {
       };
     });
 
-    this.setState({ todos: checkedTodos }, () => {
-      this.checked = !this.checked;
-    });
+    this.checked = !this.checked;
+    this.setState({ todos: checkedTodos });
   }
 
   submitTodo(event) {
@@ -217,7 +216,10 @@ class Todo extends React.Component {
 
     return (
       <section className={styles.todoApp}>
-        <span className={styles.checkAll} onClick={this.checkAllTodos} />
+        <span
+          className={this.checked ? styles.todosChecked : styles.checkAll}
+          onClick={this.checkAllTodos}
+        />
         <input
           type="text"
           className={styles.todoInput}
