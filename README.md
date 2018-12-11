@@ -1,2 +1,2 @@
 # react-todo-app
-A classic todo app.
+A classic todo list app.
