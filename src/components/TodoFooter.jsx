@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from '../assets/css/todo-footer.css';
 
-function TodoFooter({ filter, filterTodos }) {
+function TodoFooter({ filter, filterTodos, clearTodos }) {
   function handleClick({ target: { name } }) {
     if (name === 'button-all' && filter !== 'all') {
       filterTodos('all');
@@ -14,7 +14,7 @@ function TodoFooter({ filter, filterTodos }) {
     ) {
       filterTodos('completed');
     } else {
-      // clearAll();
+      clearTodos();
     }
   }
 
@@ -61,6 +61,7 @@ function TodoFooter({ filter, filterTodos }) {
 TodoFooter.propTypes = {
   filter: PropTypes.string.isRequired,
   filterTodos: PropTypes.func.isRequired,
+  clearTodos: PropTypes.func.isRequired,
 };
 
 export default TodoFooter;

@@ -24,6 +24,7 @@ class Todo extends React.Component {
     this.changeTodo = this.changeTodo.bind(this);
     this.removeTodo = this.removeTodo.bind(this);
     this.filterTodos = this.filterTodos.bind(this);
+    this.clearTodos = this.clearTodos.bind(this);
   }
 
   handleChange({ target: { value } }) {
@@ -136,6 +137,18 @@ class Todo extends React.Component {
     }
   }
 
+  clearTodos() {
+    if (this.filter !== 'all') {
+      const { todos } = this.state;
+
+      Object.keys(todos).forEach((todoKey) => {
+        this.allTodos = immutableRemoveObjectProperty(this.allTodos, todoKey);
+      });
+    }
+
+    this.setState({ todos: {} });
+  }
+
   render() {
     const { todo, todos } = this.state;
     const todoList = Object.values(todos);
@@ -168,6 +181,7 @@ class Todo extends React.Component {
             <TodoFooter
               filter={this.filter}
               filterTodos={this.filterTodos}
+              clearTodos={this.clearTodos}
             />
           </>
         )}
