@@ -13,6 +13,11 @@ function immutableRemoveObjectProperty(obj, property) {
   );
 }
 
+function isEmptyObject(object) {
+  return typeof object === 'object' && Object.values(object).length === 0;
+}
+
 export {
-  immutableRemoveObjectProperty
+  immutableRemoveObjectProperty,
+  isEmptyObject,
 };

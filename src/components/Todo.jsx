@@ -2,7 +2,7 @@ import React from 'react';
 import shortid from 'shortid';
 import TodoItem from './TodoItem';
 import TodoFooter from './TodoFooter';
-import { immutableRemoveObjectProperty } from '../utils';
+import { immutableRemoveObjectProperty, isEmptyObject } from '../utils';
 import styles from '../assets/css/todo.css';
 
 class Todo extends React.Component {
@@ -25,6 +25,7 @@ class Todo extends React.Component {
     this.removeTodo = this.removeTodo.bind(this);
     this.filterTodos = this.filterTodos.bind(this);
     this.clearTodos = this.clearTodos.bind(this);
+    this.itemsLeft = this.itemsLeft.bind(this);
   }
 
   handleChange({ target: { value } }) {
@@ -116,6 +117,8 @@ class Todo extends React.Component {
       this.setState({
         todos: Object.assign({}, this.allTodos),
       });
+
+      this.allTodos = {};
     } else {
       const filteredTodos = {};
 
@@ -142,11 +145,35 @@ class Todo extends React.Component {
       const { todos } = this.state;
 
       Object.keys(todos).forEach((todoKey) => {
-        this.allTodos = immutableRemoveObjectProperty(this.allTodos, todoKey);
+        this.allTodos = immutableRemoveObjectProperty(
+          this.allTodos,
+          todoKey,
+        );
       });
     }
 
     this.setState({ todos: {} });
+  }
+
+  itemsLeft() {
+    let todosArray;
+
+    if (isEmptyObject(this.allTodos)) {
+      const { todos } = this.state;
+      todosArray = Object.values(todos);
+    } else {
+      todosArray = Object.values(this.allTodos);
+    }
+
+    let numberCompletedTodos = 0;
+
+    todosArray.forEach((todo) => {
+      if (todo.isCompleted) {
+        numberCompletedTodos += 1;
+      }
+    });
+
+    return todosArray.length - numberCompletedTodos;
   }
 
   render() {
@@ -182,6 +209,7 @@ class Todo extends React.Component {
               filter={this.filter}
               filterTodos={this.filterTodos}
               clearTodos={this.clearTodos}
+              itemsLeft={this.itemsLeft}
             />
           </>
         )}
