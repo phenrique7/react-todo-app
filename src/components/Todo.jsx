@@ -2,7 +2,13 @@ import React from 'react';
 import shortid from 'shortid';
 import TodoItem from './TodoItem';
 import TodoFooter from './TodoFooter';
-import { immutableRemoveObjectProperty, isEmptyObject } from '../utils';
+import {
+  getItemStorage,
+  immutableRemoveObjectProperty,
+  isEmptyObject,
+  removeItemStorage,
+  setItemStorage,
+} from '../utils';
 import styles from '../assets/css/todo.css';
 
 class Todo extends React.Component {
@@ -13,9 +19,11 @@ class Todo extends React.Component {
     this.checked = false;
     this.allTodos = {};
 
+    const storagedTodos = getItemStorage('todos');
+
     this.state = {
       todo: '',
-      todos: {},
+      todos: storagedTodos ? JSON.parse(storagedTodos) : {},
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -26,6 +34,33 @@ class Todo extends React.Component {
     this.filterTodos = this.filterTodos.bind(this);
     this.clearTodos = this.clearTodos.bind(this);
     this.itemsLeft = this.itemsLeft.bind(this);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.filter !== 'all') {
+      const storagedTodos = getItemStorage('todos');
+      const stringifyedTodos = JSON.stringify(this.allTodos);
+
+      if (storagedTodos) {
+        if (stringifyedTodos !== storagedTodos) {
+          setItemStorage('todos', stringifyedTodos);
+        }
+      } else {
+        setItemStorage('todos', stringifyedTodos);
+      }
+    } else {
+      const { todos } = this.state;
+      const stringifyedTodos = JSON.stringify(todos);
+      const StringifyedPrevTodos = JSON.stringify(prevState.todos);
+
+      if (stringifyedTodos !== StringifyedPrevTodos) {
+        setItemStorage('todos', stringifyedTodos);
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    removeItemStorage('todos');
   }
 
   handleChange({ target: { value } }) {
