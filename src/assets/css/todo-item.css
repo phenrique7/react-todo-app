@@ -55,6 +55,12 @@
   word-break: break-word;
 }
 
+@media screen and (max-width: 469px) {
+  .todo {
+    font-size: 18px;
+  }
+}
+
 .todoCompleted {
   composes: todo;
   color: rgba(0, 0, 0, 0.2);

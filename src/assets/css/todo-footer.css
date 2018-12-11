@@ -1,9 +1,9 @@
 .footer {
-  height: 41px;
+  min-height: 41px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 5px 10px;
   flex-wrap: wrap;
 }
 
@@ -73,4 +73,20 @@
 .activeButton {
   border: 1px solid rgba(175, 47, 47, 0.15) !important;
   border-radius: 3px;
+}
+
+@media screen and (max-width: 469px) {
+  .footer ul {
+    order: 1;
+    width: 100%;
+    text-align: center;
+  }
+
+  .footer p {
+    order: 2;
+  }
+
+  .footer > button {
+    order: 3;
+  }
 }

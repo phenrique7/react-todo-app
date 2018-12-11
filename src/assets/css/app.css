@@ -26,3 +26,9 @@
   width: fit-content;
   margin: 0 auto;
 }
+
+@media screen and (max-width: 469px) {
+  .title {
+    font-size: 80px;
+  }
+}

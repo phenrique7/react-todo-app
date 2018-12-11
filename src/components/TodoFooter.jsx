@@ -17,7 +17,7 @@ function TodoFooter(props) {
       filterTodos('active');
     } else if (name === 'button-completed' && filter !== 'completed') {
       filterTodos('completed');
-    } else {
+    } else if (name === 'button-clear') {
       clearTodos();
     }
   }
