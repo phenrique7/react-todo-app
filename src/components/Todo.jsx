@@ -12,6 +12,19 @@ import {
 import styles from '../assets/css/todo.css';
 
 class Todo extends React.Component {
+  static areAllTodosChecked(todos) {
+    const todosArray = Object.values(todos);
+    let todosChecked = 0;
+
+    todosArray.forEach((todo) => {
+      if (todo.isCompleted) {
+        todosChecked += 1;
+      }
+    });
+
+    return todosArray.length === todosChecked;
+  }
+
   constructor(props) {
     super(props);
 
@@ -69,18 +82,45 @@ class Todo extends React.Component {
 
   checkAllTodos() {
     const { todos } = this.state;
-    const checkedTodos = {};
-    const todosKeys = Object.keys(todos);
 
-    todosKeys.forEach((todoKey) => {
-      checkedTodos[todoKey] = {
-        ...todos[todoKey],
-        isCompleted: !this.checked,
-      };
-    });
+    if (this.filter !== 'all') {
+      const todosKeys = Object.keys(todos);
 
-    this.checked = !this.checked;
-    this.setState({ todos: checkedTodos });
+      if (Todo.areAllTodosChecked(todos)) {
+        this.checked = false;
+
+        todosKeys.forEach((todoKey) => {
+          this.allTodos[todoKey] = {
+            ...todos[todoKey],
+            isCompleted: false,
+          };
+        });
+      } else {
+        this.checked = true;
+
+        todosKeys.forEach((todoKey) => {
+          this.allTodos[todoKey] = {
+            ...todos[todoKey],
+            isCompleted: true,
+          };
+        });
+      }
+
+      this.setState({ todos: {} });
+    } else {
+      const checkedTodos = {};
+      const todosKeys = Object.keys(todos);
+
+      todosKeys.forEach((todoKey) => {
+        checkedTodos[todoKey] = {
+          ...todos[todoKey],
+          isCompleted: !this.checked,
+        };
+      });
+
+      this.checked = !this.checked;
+      this.setState({ todos: checkedTodos });
+    }
   }
 
   submitTodo(event) {
@@ -117,12 +157,19 @@ class Todo extends React.Component {
 
       this.filterTodos(this.filter);
     } else {
-      this.setState(state => ({
-        todos: {
-          ...state.todos,
-          [todoId]: { ...state.todos[todoId], [property]: value },
-        },
-      }));
+      const { todos } = this.state;
+      const changedTodos = {
+        ...todos,
+        [todoId]: { ...todos[todoId], [property]: value },
+      };
+
+      if (Todo.areAllTodosChecked(changedTodos)) {
+        this.checked = true;
+      } else if (this.checked) {
+        this.checked = false;
+      }
+
+      this.setState({ todos: changedTodos });
     }
   }
 
@@ -148,6 +195,12 @@ class Todo extends React.Component {
     this.filter = filter;
 
     if (filter === 'all') {
+      if (Todo.areAllTodosChecked(this.allTodos)) {
+        this.checked = true;
+      } else if (this.checked) {
+        this.checked = false;
+      }
+
       this.setState({
         todos: Object.assign({}, this.allTodos),
       });
@@ -168,6 +221,12 @@ class Todo extends React.Component {
             filteredTodos[todo.id] = Object.assign({}, todo);
           }
         });
+      }
+
+      if (Todo.areAllTodosChecked(filteredTodos)) {
+        this.checked = true;
+      } else if (this.checked) {
+        this.checked = false;
       }
 
       this.setState({ todo: '', todos: filteredTodos });
@@ -216,10 +275,12 @@ class Todo extends React.Component {
 
     return (
       <section className={styles.todoApp}>
-        <span
-          className={this.checked ? styles.todosChecked : styles.checkAll}
-          onClick={this.checkAllTodos}
-        />
+        {todoList.length > 0 && (
+          <span
+            className={this.checked ? styles.todosChecked : styles.checkAll}
+            onClick={this.checkAllTodos}
+          />
+        )}
         <input
           type="text"
           className={styles.todoInput}

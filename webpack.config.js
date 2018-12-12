@@ -52,6 +52,7 @@ module.exports = {
       title: 'React Todo App',
       template: './src/index.html',
       filename: './index.html',
+      favicon: './src/assets/favicon.ico',
     }),
     new webpack.HotModuleReplacementPlugin(),
   ],

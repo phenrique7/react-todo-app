@@ -4,7 +4,8 @@
   "description": "A classical todo app",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --mode development",
+    "dev": "webpack --mode development",
+    "dev-server": "webpack-dev-server --mode development",
     "prod": "webpack --mode production"
   },
   "repository": {
