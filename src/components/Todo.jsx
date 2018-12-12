@@ -137,6 +137,8 @@ class Todo extends React.Component {
 
         this.filterTodos(this.filter);
       } else {
+        this.checked = false;
+
         this.setState(state => ({
           todo: '',
           todos: {
@@ -179,10 +181,13 @@ class Todo extends React.Component {
       this.filterTodos(this.filter);
     } else {
       const { todos } = this.state;
+      const changedTodos = immutableRemoveObjectProperty(todos, todoId);
 
-      this.setState({
-        todos: immutableRemoveObjectProperty(todos, todoId),
-      });
+      if (Todo.areAllTodosChecked(changedTodos)) {
+        this.checked = true;
+      }
+
+      this.setState({ todos: changedTodos });
     }
   }
 
