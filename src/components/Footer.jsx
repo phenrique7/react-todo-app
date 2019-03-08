@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from '../assets/css/todo-footer.css';
 
-function TodoFooter(props) {
+function Footer(props) {
   const {
     filter,
     filterTodos,
@@ -64,11 +64,11 @@ function TodoFooter(props) {
   );
 }
 
-TodoFooter.propTypes = {
+Footer.propTypes = {
   filter: PropTypes.string.isRequired,
   filterTodos: PropTypes.func.isRequired,
   clearTodos: PropTypes.func.isRequired,
   itemsLeft: PropTypes.func.isRequired,
 };
 
-export default TodoFooter;
+export default Footer;

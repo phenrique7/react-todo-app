@@ -10,7 +10,8 @@ function App() {
       <div className={styles.info}>
         <p>Double-click to edit a todo</p>
         <p>
-          Created by {' '}
+          Created by
+          {' '}
           <a href="https://github.com/phenrique7/">phenrique7</a>
         </p>
       </div>
